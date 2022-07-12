@@ -23,12 +23,12 @@ class Server {
         this.start();
     }
 
-    middlewares(){
-        this.app.use(cors());
-    }
-
     database() {
         getConnection();
+    }
+
+    middlewares(){
+        this.app.use(cors());
     }
 
     start() {
