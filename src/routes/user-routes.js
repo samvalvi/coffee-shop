@@ -9,7 +9,11 @@ const { validateEmailExist, validateUserById } = require('../helpers/user-valida
 
 router.get('/', getUsers);
 
-router.get('/:id', getUserById);
+router.get('/:id', [
+    check('id').not().isEmpty().isMongoId().withMessage('Id is required'),
+    check('id').custom(validateUserById),
+    validateFields
+], getUserById);
 
 router.post('/', [
     check('name').not().isEmpty().withMessage('Name is required'),
@@ -28,7 +32,11 @@ router.put('/:id', [
     validateFields
 ],updateUser);
 
-router.delete('/:id', deleteUser);
+router.delete('/:id', [
+    check('id').not().isEmpty().isMongoId().withMessage('Id is required'),
+    check('id').custom(validateUserById),
+    validateFields
+], deleteUser);
 
 
 module.exports = router;

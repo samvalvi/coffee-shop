@@ -4,21 +4,32 @@ const bcrypt = require('bcrypt');
 
 
 const getUsers = async (req=request, res=response) => {
-   const users = await userSchema.find();
+    const query = {status: true}
+    const users = await userSchema.find(query);
+
+    const records = await userSchema.countDocuments(query);
+
     res.status(200).json({
         statusCode: 200,
         message: 'Get users',
         data: {
+            "records": records,
             users
         }
     });
 }
 
 
-const getUserById = (req, res=response) => {
+const getUserById = async (req, res=response) => {
+    const {id} = req.params;
+    const user = await userSchema.findById(id);
+
     res.status(200).json({
         statusCode: 200,
-        message: 'Get user by id'
+        message: 'User founded',
+        data: {
+            user
+        }   
     });
 }
 
@@ -62,10 +73,16 @@ const updateUser = async(req=require, res=response) => {
 }
 
 
-const deleteUser = (req, res=response) => {
+const deleteUser = async (req, res=response) => {
+    const {id} = req.params;
+    const userDeactivated = await userSchema.findByIdAndUpdate(id, {status: false});
+
     res.status(200).json({
         statusCode: 200,
-        message: 'Delete user'
+        message: 'User deactivated',
+        data: {
+            userDeactivated
+        }
     });
 }
 
