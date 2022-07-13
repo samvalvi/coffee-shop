@@ -19,4 +19,25 @@ const adminRoleValidate = (req=request, res=response, next) => {
     next();
 }
 
-module.exports = { adminRoleValidate };
+const hasRole = (...roles) => {
+
+    return (req=request, res=response, next)=> {
+        if(!req.user){
+            return res.status(401).json({
+                msg: 'Forbidden, you cannot access this resource until you verify the token.'
+            });
+        }
+
+        const { role } = req.user;
+
+        if(!roles.includes(role)){
+            return res.status(401).json({
+                msg: 'Forbidden, you cannot access this resource.'
+            });
+        }
+
+        next();
+    }
+}
+
+module.exports = { adminRoleValidate, hasRole };

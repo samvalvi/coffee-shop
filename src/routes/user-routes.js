@@ -5,7 +5,7 @@ const { validateFields } = require('../middlewares/fields-validate');
 const { roleValidate } = require('../helpers/db-validator');
 const { validateEmailExist, validateUserById } = require('../helpers/user-validator');
 const { validateToken } = require('../middlewares/jwt-validate');
-const { adminRoleValidate } = require('../middlewares/role-validate');
+const { adminRoleValidate, hasRole } = require('../middlewares/role-validate');
 
 
 router.get('/', [
@@ -32,6 +32,7 @@ router.post('/', [
 
 router.put('/:id', [
     validateToken,
+    hasRole('ADMIN_ROLE', 'USER_ROLE'),
     check('id').not().isEmpty().isMongoId().withMessage('Id is required'),
     check('id').custom(validateUserById),
     check('email').isEmail(),
@@ -41,6 +42,7 @@ router.put('/:id', [
 
 router.delete('/:id', [
     validateToken,
+    hasRole('ADMIN_ROLE','USER_ROLE'),
     check('id').not().isEmpty().isMongoId().withMessage('Id is required'),
     check('id').custom(validateUserById),
     validateFields
