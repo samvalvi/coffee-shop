@@ -8,6 +8,7 @@ class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT || 3000;
+        this.authPath = '/api/auth';
         this.userPath = '/api/user';
 
         //Database
@@ -32,6 +33,7 @@ class Server {
     }
 
     start() {
+        this.app.use(this.authPath, require('./routes/auth-routes'));
         this.app.use(this.userPath, require('./routes/user-routes'));
     }
 

@@ -1,15 +1,20 @@
 const router = require('express').Router();
 const { getUsers, getUserById, createUser, updateUser, deleteUser } = require('../controllers/user-controller');
 const { check } = require('express-validator');
-const { validateFields } = require('../middlewares/validate');
+const { validateFields } = require('../middlewares/fields-validate');
 const { roleValidate } = require('../helpers/db-validator');
 const { validateEmailExist, validateUserById } = require('../helpers/user-validator');
+const { validateToken } = require('../middlewares/jwt-validate');
+const { adminRoleValidate } = require('../middlewares/role-validate');
 
 
-
-router.get('/', getUsers);
+router.get('/', [
+    validateToken,
+    adminRoleValidate,
+],getUsers);
 
 router.get('/:id', [
+    validateToken,
     check('id').not().isEmpty().isMongoId().withMessage('Id is required'),
     check('id').custom(validateUserById),
     validateFields
@@ -20,11 +25,13 @@ router.post('/', [
     check('email').isEmail().not().isEmpty().withMessage('Email is required'),
     check('email').custom(validateEmailExist),
     check('password').not().isEmpty().withMessage('Password is required'),
+    check('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
     check('role').custom(roleValidate),
     validateFields
 ] ,createUser);
 
 router.put('/:id', [
+    validateToken,
     check('id').not().isEmpty().isMongoId().withMessage('Id is required'),
     check('id').custom(validateUserById),
     check('email').isEmail(),
@@ -33,6 +40,7 @@ router.put('/:id', [
 ],updateUser);
 
 router.delete('/:id', [
+    validateToken,
     check('id').not().isEmpty().isMongoId().withMessage('Id is required'),
     check('id').custom(validateUserById),
     validateFields
