@@ -42,7 +42,7 @@ const validateRefreshToken = (token) => {
         return new Promise((resolve, reject) => {
     
             jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
-                if(!payload.expiresIn < Date.now()){
+                if(payload.expiresIn < Date.now()){
                     reject(true);
                 }
                 else{
