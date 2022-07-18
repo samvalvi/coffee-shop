@@ -15,6 +15,7 @@ router.get('/', [
 
 router.get('/:id', [
     validateToken,
+    hasRole('ADMIN_ROLE'),
     check('id').not().isEmpty().isMongoId().withMessage('Id is required'),
     check('id').custom(validateUserById),
     validateFields

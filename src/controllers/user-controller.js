@@ -59,7 +59,7 @@ const createUser = async (req, res=response) => {
 }
 
 
-const updateUser = async(req=require, res=response) => {
+const updateUser = async(req=request, res=response) => {
     const {id} = req.params;
     const {_id, password, role, google, ...user} = req.body;
 

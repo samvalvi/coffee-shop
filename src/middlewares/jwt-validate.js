@@ -12,25 +12,13 @@ const validateToken = async (req=request, res=response, next) => {
     }
 
     try {
-        const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+        const { id } = jwt.verify(token, process.env.JWT_SECRET);
        
         //Validade user
-        const user = await userSchema.findById(uid);
-       
-        if (!user) {
-            return res.status(401).json({
-                msg: 'Token is not valid.'
-            }); 
-        }
-
-        //Validate user status
-        if (!user.status) {
-            return res.status(401).json({
-                msg: 'Token is not valid.'
-            });
-        }
+        const user = await userSchema.findById(id);
 
         req.user = user;
+        
         next();
     } catch (err) {
         return res.status(401).json({

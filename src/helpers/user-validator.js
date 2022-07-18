@@ -10,8 +10,12 @@ const validateEmailExist = async(email='') => {
 
 
 const validateUserById = async(id) => {
-    const user = await userSchema.findById(id);
+    const user = await userSchema.findById(id);   
     if(!user) {
+        throw new Error(`User ${id} not found`);
+    }
+
+    if(!user.status) {
         throw new Error(`User ${id} not found`);
     }
 }

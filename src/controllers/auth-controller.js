@@ -1,8 +1,7 @@
 const { response, request } = require('express');
 const userSchema = require('../models/user-model');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { createToken } = require('../helpers/jwt-creator');
+const { createToken, createRefreshToken, validateRefreshToken } = require('../helpers/jwt-creator');
 
 
 const login = async (req=request, res=response) => {
@@ -32,14 +31,28 @@ const login = async (req=request, res=response) => {
             });
         }
 
-        //Create token
-        const token = await createToken(user.id);
+        const [token, newRefreshToken] = await Promise.all([
+            createToken(user.id),
+            createRefreshToken(user.id)
+        ]);
+
+        if(!user.refreshToken){
+            user.refreshToken = newRefreshToken;
+            await user.save();
+        }
+
+        const isValid = await validateRefreshToken(user.refreshToken);
+        if(!isValid){
+            user.refreshToken = newRefreshToken;
+            await user.save();
+        }
 
         //Send response
         res.status(200).json({
             msg: 'Login successful',
             data: {
-                "token": token,
+                "accessToken": token,
+                "refreshToken": refreshToken,
                 "user": user
             }
         });
@@ -55,6 +68,5 @@ const signup = async (req=request, res=response) => {
 
 
 module.exports = {
-    login,
-    signup
+    login
 }
