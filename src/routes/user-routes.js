@@ -6,6 +6,7 @@ const { roleValidate } = require('../helpers/db-validator');
 const { validateEmailExist, validateUserById } = require('../helpers/user-validator');
 const { validateToken } = require('../middlewares/jwt-validate');
 const { adminRoleValidate, hasRole } = require('../middlewares/role-validate');
+const { activateUser } = require('../middlewares/activate-user');
 
 
 router.get('/', [
@@ -24,6 +25,7 @@ router.get('/:id', [
 router.post('/', [
     check('name').not().isEmpty().withMessage('Name is required'),
     check('email').isEmail().not().isEmpty().withMessage('Email is required'),
+    activateUser,
     check('email').custom(validateEmailExist),
     check('password').not().isEmpty().withMessage('Password is required'),
     check('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),

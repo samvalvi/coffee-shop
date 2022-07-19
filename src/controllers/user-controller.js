@@ -39,7 +39,7 @@ const getUserById = async (req, res=response) => {
 const createUser = async (req, res=response) => {
     const {name, email, password, role} = req.body;
     const user = new userSchema({name, email, password, role});
-
+    
     //Salts
     const salt = await bcrypt.genSaltSync(13);
 
@@ -69,7 +69,7 @@ const updateUser = async(req=request, res=response) => {
         statusCode: 200,
         message: 'User updated',
         data: {
-            user
+            userUpdated
         }
     });
 }

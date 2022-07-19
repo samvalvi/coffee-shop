@@ -12,7 +12,7 @@ const login = async (req=request, res=response) => {
         const user = await userSchema.findOne({ email });
         if(!user){
             return res.status(400).json({
-                msg: 'User or password is incorrect'
+                msg: 'Check your email and password'
             });
         }
 
@@ -27,7 +27,7 @@ const login = async (req=request, res=response) => {
         const isMatch = await bcrypt.compareSync(password, user.password);
         if(!isMatch){
             return res.status(400).json({
-                msg: 'User or password is incorrect'
+                msg: 'Check your email and password'
             });
         }
 
@@ -42,7 +42,7 @@ const login = async (req=request, res=response) => {
         }
 
         const isValid = await validateRefreshToken(user.refreshToken);
-        if(!isValid){
+        if(isValid){
             user.refreshToken = newRefreshToken;
             await user.save();
         }
@@ -52,7 +52,6 @@ const login = async (req=request, res=response) => {
             msg: 'Login successful',
             data: {
                 "accessToken": token,
-                "refreshToken": user.refreshToken,
                 "user": user
             }
         });

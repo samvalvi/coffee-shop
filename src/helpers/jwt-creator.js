@@ -37,11 +37,10 @@ const createRefreshToken = (id) => {
 }
 
 
-const validateRefreshToken = (token) => {
+const validateRefreshToken = (refreshToken) => {
     
-        return new Promise((resolve, reject) => {
-    
-            jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
+        return new Promise((resolve, reject) => { 
+            jwt.verify(refreshToken, process.env.JWT_SECRET, (err, payload) => {
                 if(payload.expiresIn < Date.now()){
                     reject(true);
                 }
