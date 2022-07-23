@@ -1,5 +1,6 @@
 const productSchema = require('../models/product-model');
 const { request, response } = require('express');
+const { validateToken } = require('../middlewares/jwt-validate');
 
 
 const getProducts = async (req=request, resp=response) => {

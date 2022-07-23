@@ -7,7 +7,7 @@ const createToken = (id) => {
 
         const payload = { id };
 
-        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '15' }, (err, token) => {
+        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '10m' }, (err, token) => {
             if(err){
                 reject('Token creation failed');
             }
@@ -50,6 +50,7 @@ const validateRefreshToken = (refreshToken) => {
             });
         });
 }
+
 
 module.exports = { 
     createToken, 

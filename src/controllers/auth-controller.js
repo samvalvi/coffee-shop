@@ -40,7 +40,7 @@ const login = async (req=request, res=response) => {
             user.refreshToken = newRefreshToken;
             await user.save();
         }
-
+        
         const isValid = await validateRefreshToken(user.refreshToken);
         if(isValid){
             user.refreshToken = newRefreshToken;

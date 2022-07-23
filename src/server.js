@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const getConnection = require('./database/config');
+const fileUpload = require('express-fileupload');
 
 
 class Server {
@@ -12,6 +13,7 @@ class Server {
         this.userPath = '/api/user';
         this.categoryPath = '/api/category';
         this.productPath = '/api/product';
+        this.uploadPath = '/api/upload';
 
         //Database
         this.database();
@@ -21,6 +23,14 @@ class Server {
 
         //Bodyparser
         this.app.use(express.json());
+
+        //fileupload
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: './tmp/',
+            //Permite crear carpetas en el directorio temporal
+            //createParentPath: true,
+        }));
 
         //Start server
         this.start();
@@ -39,6 +49,7 @@ class Server {
         this.app.use(this.userPath, require('./routes/user-routes'));
         this.app.use(this.categoryPath, require('./routes/category-routes'));
         this.app.use(this.productPath, require('./routes/product-routes'));
+        this.app.use(this.uploadPath, require('./routes/upload-routes'));
     }
 
     listen() {

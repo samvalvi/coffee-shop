@@ -34,7 +34,7 @@ router.post('/', [
     check('description').not().isEmpty().withMessage('Description is required'),
     check('price').not().isEmpty().withMessage('Price is required'),
     check('category').not().isEmpty().withMessage('Category is required'),
-    check('catetgory').isMongoId().withMessage('Category must be a valid MongoId'),
+    check('category').isMongoId().withMessage('Category must be a valid MongoId'),
     validateFields
 ], createProduct);
 

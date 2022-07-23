@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 const getUsers = async (req=request, res=response) => {
     const query = {status: true}
-
+   
     const [total, users] = await Promise.all([
         userSchema.countDocuments(query),
         userSchema.find(query)
